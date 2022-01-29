@@ -23,13 +23,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     // 初期化された時にアニメーションコントローラーを作成して保存する
     controller = AnimationController(
       // アニメーションをどのくらい続けるか
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 1),
       // 毎フレームごとに更新を伝える
       vsync: this,
     );
 
     // カラートゥイーンアニメーション
-    animation = ColorTween(begin: Colors.red, end: Colors.blue).animate(controller);
+    animation = ColorTween(begin: Colors.blueGrey, end: Colors.white).animate(controller);
 
     // アニメーションを実行
     controller.forward();
