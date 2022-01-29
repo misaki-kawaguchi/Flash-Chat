@@ -27,6 +27,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       // 毎フレームごとに更新を伝える
       vsync: this,
     );
+
+    // アニメーションを実行
+    controller.forward();
   }
 
   @override
