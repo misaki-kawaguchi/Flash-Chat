@@ -30,6 +30,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
     // アニメーションを実行
     controller.forward();
+
+    // コントローラーが何をしているか確認
+    controller.addListener(() {
+      print(controller.value);
+    });
   }
 
   @override
