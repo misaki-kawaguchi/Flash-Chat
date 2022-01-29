@@ -37,7 +37,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
     // statusが変わるたびに呼ばれる(アニメーション終了タイミングを知りたいときなど)
     animation.addStatusListener((status) {
-      print(status);
+      if (status == AnimationStatus.completed) {
+        controller.reverse(from: 1.0);
+      } else if (status == AnimationStatus.dismissed) {
+        controller.forward();
+      }
     });
 
     // コントローラーが何をしているか確認
