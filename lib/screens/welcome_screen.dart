@@ -14,6 +14,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
 
   AnimationController controller;
+  Animation animation;
 
   @override
   void initState() {
@@ -29,6 +30,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       // 上限を1から100に変更する
       upperBound: 100.0
     );
+
+    // 曲線グラフのアニメーション
+    animation = CurvedAnimation(parent: controller, curve: Curves.decelerate);
 
     // アニメーションを実行
     controller.forward();
