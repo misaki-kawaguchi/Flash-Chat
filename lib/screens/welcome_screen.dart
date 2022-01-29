@@ -26,6 +26,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       duration: Duration(seconds: 1),
       // 毎フレームごとに更新を伝える
       vsync: this,
+      // 上限を1から100に変更する
+      upperBound: 100.0
     );
 
     // アニメーションを実行
@@ -41,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red.withOpacity(controller.value),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
