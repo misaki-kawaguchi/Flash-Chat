@@ -27,8 +27,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       duration: Duration(seconds: 1),
       // 毎フレームごとに更新を伝える
       vsync: this,
-      // 上限を1から100に変更する
-      upperBound: 100.0
     );
 
     // 曲線グラフのアニメーション
@@ -40,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     // コントローラーが何をしているか確認
     controller.addListener(() {
       setState(() {});
-      print(controller.value);
+      print(animation.value);
     });
   }
 
@@ -60,7 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: controller.value,
+                    height: animation.value * 100,
                   ),
                 ),
                 Text(
