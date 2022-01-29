@@ -10,11 +10,48 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+// SingleTickerProviderStateMixin(AnimationControllerが1つだけのとき)
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+
+  AnimationController controller;
+  Animation animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 初期化された時にアニメーションコントローラーを作成して保存する
+    controller = AnimationController(
+      // アニメーションをどのくらい続けるか
+      duration: Duration(seconds: 1),
+      // 毎フレームごとに更新を伝える
+      vsync: this,
+    );
+
+    // カラートゥイーンアニメーション
+    animation = ColorTween(begin: Colors.blueGrey, end: Colors.white).animate(controller);
+
+    // アニメーションを実行
+    controller.forward();
+
+    // コントローラーが何をしているか確認
+    controller.addListener(() {
+      setState(() {});
+      print(animation.value);
+    });
+  }
+
+  // 画面が破棄される時
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
