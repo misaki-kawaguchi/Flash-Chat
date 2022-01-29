@@ -10,9 +10,24 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+// SingleTickerProviderStateMixin(AnimationControllerが1つだけのとき)
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
 
   AnimationController controller;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // 初期化された時にアニメーションコントローラーを作成して保存する
+    controller = AnimationController(
+      // アニメーションをどのくらい続けるか
+      duration: Duration(seconds: 1),
+      // 毎フレームごとに更新を伝える
+      vsync: this,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
