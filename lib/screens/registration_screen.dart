@@ -59,7 +59,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             RoundedButton(
               title: 'Register',
               colour: Colors.blueAccent,
-              onPressed: () {},
+              onPressed: () {
+                print(email);
+                print(password);
+              },
             ),
           ],
         ),
