@@ -23,6 +23,9 @@ class RoundedButton extends StatelessWidget {
           child: Text(
             // nullは受け付けない
             title ?? '',
+            style: TextStyle(
+              color: Colors.white
+            ),
           ),
         ),
       ),
