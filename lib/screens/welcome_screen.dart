@@ -31,14 +31,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
 
     // カラートゥイーンアニメーション
     animation = ColorTween(begin: Colors.blueGrey, end: Colors.white).animate(controller);
-
     // アニメーションを実行
     controller.forward();
-
     // コントローラーが何をしているか確認
     controller.addListener(() {
       setState(() {});
-      print(animation.value);
     });
   }
 
