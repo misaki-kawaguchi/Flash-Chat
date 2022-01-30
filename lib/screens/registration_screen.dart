@@ -1,3 +1,4 @@
+import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
@@ -67,9 +68,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             RoundedButton(
               title: 'Register',
               colour: Colors.blueAccent,
-              onPressed: () {
-                print(email);
-                print(password);
+              onPressed: () async {
+                try {
+                  // ユーザーを作成
+                  final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+
+                  if (newUser != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                }
+                catch(e) {
+                  print(e);
+                }
               },
             ),
           ],
