@@ -13,6 +13,9 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
+  // Firestoreのインスタンス
+  final _firestore = FirebaseFirestore.instance;
+
   // 認証インスタンス
   final _auth = FirebaseAuth.instance;
 
@@ -80,6 +83,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () {
                       //messageText + loggedInUser.email
+                      // コレクションからmessagesを取得する
+                      _firestore.collection('messages').add({
+                        'text': messageText,
+                        'sender': loggedInUser.email,
+                      });
                     },
                     child: Text(
                       'Send',
