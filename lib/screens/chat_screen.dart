@@ -15,6 +15,9 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
+  // テキストフィールドの入力内容を管理する
+  final messageTextController = TextEditingController();
+
   // 認証インスタンス
   final _auth = FirebaseAuth.instance;
 
@@ -91,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
                         //Do something with the user input.
                         messageText = value;
@@ -100,6 +104,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   FlatButton(
                     onPressed: () {
+                      // テキストフィールドの内容をクリアする
+                      messageTextController.clear();
                       //messageText + loggedInUser.email
                       // コレクションからmessagesを取得する
                       _firestore.collection('messages').add({
