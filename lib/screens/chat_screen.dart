@@ -3,8 +3,10 @@ import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatScreen extends StatefulWidget {
+// Firestoreのインスタンス
+final _firestore = FirebaseFirestore.instance;
 
+class ChatScreen extends StatefulWidget {
   static const String id = "chat_screen";
 
   @override
@@ -13,8 +15,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
 
-  // Firestoreのインスタンス
-  final _firestore = FirebaseFirestore.instance;
+  // テキストフィールドの入力内容を管理する
+  final messageTextController = TextEditingController();
 
   // 認証インスタンス
   final _auth = FirebaseAuth.instance;
@@ -38,8 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if (user != null) {
         loggedInUser = user;
       }
-    }
-    catch(e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -57,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void messagesStream() async {
     await for (var snapshot in _firestore.collection('messages').snapshots()) {
       for (var message in snapshot.docs) {
-         print(message.data()['text']);
+        print(message.data()['text']);
       }
     }
   }
@@ -85,32 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              // 新しいデータが入ってきたときに再構築する
-              stream: _firestore.collection('messages').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.lightBlueAccent,
-                    ),
-                  );
-                }
-                final messages = snapshot.data.docs;
-                List<Text> messageWidgets = [];
-                for (var message in messages) {
-                  final messageText = message['text'];
-                  final messageSender = message['sender'];
-
-                  final messageWidget = Text('$messageText from $messageSender');
-
-                  messageWidgets.add(messageWidget);
-                }
-                return Column(
-                  children: messageWidgets,
-                );
-              }
-            ),
+            MessageStream(),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -118,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: messageTextController,
                       onChanged: (value) {
                         //Do something with the user input.
                         messageText = value;
@@ -127,6 +104,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   FlatButton(
                     onPressed: () {
+                      // テキストフィールドの内容をクリアする
+                      messageTextController.clear();
                       //messageText + loggedInUser.email
                       // コレクションからmessagesを取得する
                       _firestore.collection('messages').add({
@@ -144,6 +123,87 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MessageStream extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      // 新しいデータが入ってきたときに再構築する
+      stream: _firestore.collection('messages').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.lightBlueAccent,
+            ),
+          );
+        }
+        final messages = snapshot.data.docs;
+        List<MessageBubble> messageBubbles = [];
+        for (var message in messages) {
+          final messageText = message['text'];
+          final messageSender = message['sender'];
+
+          final messageBubble = MessageBubble(
+            sender: messageSender,
+            text: messageText,
+          );
+
+          messageBubbles.add(messageBubble);
+        }
+        return Expanded(
+          child: ListView(
+            padding:
+            EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            children: messageBubbles,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class MessageBubble extends StatelessWidget {
+  MessageBubble({this.sender, this.text});
+
+  final String sender;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Text(
+            sender,
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.black54,
+            ),
+          ),
+          Material(
+            borderRadius: BorderRadius.circular(30.0),
+            elevation: 5.0,
+            color: Colors.lightBlueAccent,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
